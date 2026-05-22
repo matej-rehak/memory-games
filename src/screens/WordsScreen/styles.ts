@@ -31,6 +31,8 @@ export const s = StyleSheet.create({
     paddingHorizontal: 14,
   },
   chipTxt: { fontFamily: 'Outfit_600SemiBold', fontSize: 15, color: Colors.ink },
+  chipOrdered: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  chipNum: { fontFamily: 'JetBrainsMono_400Regular', fontSize: 11, color: Colors.muted },
   inputRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
   inputNum: {
     fontFamily: 'JetBrainsMono_400Regular',

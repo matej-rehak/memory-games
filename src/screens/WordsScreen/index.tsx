@@ -55,6 +55,7 @@ export default function WordsScreen({ navigation }: Props) {
   const [attempt, setAttempt] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
+  const [strictOrder, setStrictOrder] = useState(false);
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
   const effectiveTime = customTime ?? WTIME[diff];
@@ -74,6 +75,16 @@ export default function WordsScreen({ navigation }: Props) {
   }, [diff, effectiveTime, effectiveWordCount, start, stop]);
 
   const checkAnswers = useCallback((wordList: string[], ans: string[]) => {
+    if (strictOrder) {
+      const used = new Set<number>();
+      let cnt = 0;
+      const newStates = ans.map((v, i) => {
+        if (!v.trim()) return 'default' as const;
+        if (norm(v) === norm(wordList[i])) { used.add(i); cnt++; return 'ok' as const; }
+        return 'no' as const;
+      });
+      return { newStates, cnt, used };
+    }
     const normWords = wordList.map(norm);
     const used = new Set<number>();
     let cnt = 0;
@@ -84,7 +95,7 @@ export default function WordsScreen({ navigation }: Props) {
       return 'no' as const;
     });
     return { newStates, cnt, used };
-  }, []);
+  }, [strictOrder]);
 
   const handleCheck = useCallback(() => {
     const { newStates, cnt, used } = checkAnswers(curWords, inputs);
@@ -157,7 +168,18 @@ export default function WordsScreen({ navigation }: Props) {
                   </TouchableOpacity>
                 ))}
               </View>
-              <Text style={s.hint}>Po každém neúspěšném pokusu se slova znovu zobrazí</Text>
+              <Text style={[s.plabel, { marginTop: 16, marginBottom: 10 }]}>Pořadí slov</Text>
+              <View style={s.attRow}>
+                {([false, true] as const).map(v => (
+                  <TouchableOpacity key={String(v)}
+                    style={[s.attBtn, strictOrder === v && { backgroundColor: Colors.surface, borderColor: COLOR }]}
+                    onPress={() => setStrictOrder(v)}>
+                    <Text style={[s.attTxt, strictOrder === v && { color: COLOR }]}>{v ? 'Povinné' : 'Volné'}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <Text style={s.hint}>Povinné — slova musí být zapsána ve správném pořadí</Text>
+              <Text style={[s.hint, { marginTop: 12 }]}>Po každém neúspěšném pokusu se slova znovu zobrazí</Text>
               <TouchableOpacity style={[s.btn, { backgroundColor: COLOR, marginTop: 24 }]} onPress={startGame}>
                 <Text style={s.btnTxt}>Spustit kolo →</Text>
               </TouchableOpacity>
@@ -169,7 +191,10 @@ export default function WordsScreen({ navigation }: Props) {
               <Text style={s.plabel}>Zapamatuj si — <Text style={{ color: COLOR }}>slova</Text></Text>
               <View style={s.chipGrid}>
                 {curWords.map((w, i) => (
-                  <View key={i} style={s.chip}><Text style={s.chipTxt}>{w}</Text></View>
+                  <View key={i} style={[s.chip, strictOrder && s.chipOrdered]}>
+                    {strictOrder && <Text style={s.chipNum}>{i + 1}.</Text>}
+                    <Text style={s.chipTxt}>{w}</Text>
+                  </View>
                 ))}
               </View>
               <CountdownBar secondsLeft={secondsLeft} animWidth={animWidth} color={COLOR} />
