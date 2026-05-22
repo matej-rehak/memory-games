@@ -1,0 +1,78 @@
+import { StyleSheet } from 'react-native';
+import { Colors, GameColors } from '../../theme';
+
+export const CELL_SIZE = 56;
+
+export const s = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: Colors.bg },
+  scroll: { padding: 16, paddingBottom: 60 },
+  panel: {
+    backgroundColor: Colors.card,
+    borderWidth: 1.5,
+    borderColor: Colors.border,
+    borderRadius: 20,
+    padding: 24,
+    borderTopWidth: 3,
+    borderTopColor: GameColors.nums,
+    alignItems: 'center',
+  },
+  plabel: {
+    fontFamily: 'JetBrainsMono_400Regular',
+    fontSize: 11,
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+    color: Colors.muted,
+    marginBottom: 16,
+    alignSelf: 'flex-start',
+  },
+  desc: {
+    fontFamily: 'Outfit_300Light',
+    fontSize: 13,
+    color: Colors.ink2,
+    marginBottom: 20,
+    lineHeight: 19,
+    alignSelf: 'flex-start',
+  },
+  sizeRow: { flexDirection: 'row', gap: 8, marginBottom: 20 },
+  sizeBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    backgroundColor: Colors.surface,
+    borderWidth: 1.5,
+    borderColor: Colors.border,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  sizeTxt: { fontFamily: 'Outfit_600SemiBold', fontSize: 14, color: Colors.ink2 },
+  sizeSub: { fontFamily: 'Outfit_300Light', fontSize: 11, color: Colors.muted, marginTop: 2 },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 7,
+    justifyContent: 'center',
+  },
+  cell: {
+    width: CELL_SIZE,
+    height: CELL_SIZE,
+    backgroundColor: Colors.surface,
+    borderWidth: 2,
+    borderColor: Colors.border,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cellInp: { backgroundColor: Colors.card, borderColor: Colors.border },
+  cellOk: { backgroundColor: Colors.green, borderColor: Colors.greenBorder },
+  cellNo: { backgroundColor: Colors.red, borderColor: Colors.redBorder },
+  cellTxt: { fontFamily: 'JetBrainsMono_700Bold', fontSize: 20, color: Colors.ink },
+  btn: {
+    paddingVertical: 13,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    alignItems: 'center',
+    alignSelf: 'stretch',
+  },
+  btnTxt: { fontFamily: 'Outfit_700Bold', fontSize: 15, color: '#fff' },
+  resultGrid: { marginTop: 18, alignItems: 'center', alignSelf: 'stretch' },
+});

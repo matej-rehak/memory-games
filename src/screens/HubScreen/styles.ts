@@ -1,0 +1,91 @@
+import { StyleSheet } from 'react-native';
+import { Colors } from '../../theme';
+
+export const s = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: Colors.bg },
+  scroll: { padding: 20, paddingBottom: 60 },
+  header: { alignItems: 'center', marginBottom: 32 },
+  eyebrow: {
+    fontFamily: 'JetBrainsMono_400Regular',
+    fontSize: 11,
+    letterSpacing: 3,
+    textTransform: 'uppercase',
+    color: Colors.muted,
+    marginBottom: 10,
+  },
+  title: {
+    fontFamily: 'Outfit_900Black',
+    fontSize: 44,
+    lineHeight: 44,
+    letterSpacing: -1.5,
+    color: Colors.ink,
+    textAlign: 'center',
+  },
+  red: { color: Colors.accent },
+  desc: {
+    marginTop: 12,
+    fontFamily: 'Outfit_300Light',
+    fontSize: 14,
+    color: Colors.ink2,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  card: {
+    backgroundColor: Colors.card,
+    borderWidth: 1.5,
+    borderColor: Colors.border,
+    borderRadius: 20,
+    padding: 24,
+    marginBottom: 14,
+    overflow: 'hidden',
+    borderTopWidth: 4,
+  },
+  cardTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 4,
+    borderRadius: 20,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 8,
+  },
+  icon: { fontSize: 36 },
+  best: { alignItems: 'flex-end' },
+  bestLbl: {
+    fontFamily: 'JetBrainsMono_400Regular',
+    fontSize: 10,
+    color: Colors.muted,
+  },
+  bestVal: {
+    fontFamily: 'JetBrainsMono_700Bold',
+    fontSize: 16,
+  },
+  gameTitle: {
+    fontFamily: 'Outfit_700Bold',
+    fontSize: 20,
+    color: Colors.ink,
+    marginBottom: 6,
+  },
+  gameDesc: {
+    fontFamily: 'Outfit_300Light',
+    fontSize: 13,
+    color: Colors.ink2,
+    lineHeight: 19,
+    marginBottom: 14,
+  },
+  tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  tag: {
+    borderRadius: 6,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+  },
+  tagTxt: {
+    fontFamily: 'JetBrainsMono_400Regular',
+    fontSize: 10,
+  },
+});
