@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useRef, useState } from 'react';
 import {
+  Animated,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -17,6 +18,7 @@ import ResultBox from '../../components/ResultBox';
 import { WCNT, WSETS, WTIME } from '../../data/words';
 import { useBests } from '../../hooks/useBests';
 import { useCountdown } from '../../hooks/useCountdown';
+import { useDistractions } from '../../hooks/useDistractions';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { Colors, GameColors } from '../../theme';
 import { haptics } from '../../utils/haptics';
@@ -56,10 +58,19 @@ export default function WordsScreen({ navigation }: Props) {
   const [correct, setCorrect] = useState(0);
   const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
   const [strictOrder, setStrictOrder] = useState(false);
+  const [distractFakeWords, setDistractFakeWords] = useState(false);
+  const [distractMovement, setDistractMovement] = useState(false);
+  const [distractNoise, setDistractNoise] = useState(false);
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
   const effectiveTime = customTime ?? WTIME[diff];
   const effectiveWordCount = customWordCount ?? WCNT[diff];
+  const { displayWords, shakeAnim, noisePatches } = useDistractions(
+    { fakeWords: distractFakeWords && attempt > 0, movement: distractMovement, noise: distractNoise },
+    curWords,
+    diff,
+    phase === 'memorize',
+  );
 
   const startGame = useCallback(() => {
     stop();
@@ -114,8 +125,8 @@ export default function WordsScreen({ navigation }: Props) {
     setInputs(new Array(curWords.length).fill(''));
     setStates(new Array(curWords.length).fill('default'));
     setPhase('memorize');
-    start(5, () => setPhase('input'));
-  }, [curWords.length, start]);
+    start(Math.max(3, Math.round(effectiveTime / 2)), () => setPhase('input'));
+  }, [curWords.length, effectiveTime, start]);
 
   const bestLabel = bests.words !== null ? `${bests.words} slov` : '—';
   const attemptsLeft = maxAttempts - attempt;
@@ -179,6 +190,52 @@ export default function WordsScreen({ navigation }: Props) {
                 ))}
               </View>
               <Text style={s.hint}>Povinné — slova musí být zapsána ve správném pořadí</Text>
+              <Text style={[s.plabel, { marginTop: 20, marginBottom: 10 }]}>Rušivé elementy</Text>
+              <View style={s.distractRow}>
+                <Text style={s.distractLabel}>Falešná slova</Text>
+                <View style={s.attRow}>
+                  <TouchableOpacity
+                    style={[s.attBtn, !distractFakeWords && { backgroundColor: Colors.surface, borderColor: COLOR }]}
+                    onPress={() => setDistractFakeWords(false)}>
+                    <Text style={[s.attTxt, !distractFakeWords && { color: COLOR }]}>Vyp</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[s.attBtn, distractFakeWords && { backgroundColor: Colors.surface, borderColor: COLOR }]}
+                    onPress={() => setDistractFakeWords(true)}>
+                    <Text style={[s.attTxt, distractFakeWords && { color: COLOR }]}>Zap</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={s.distractRow}>
+                <Text style={s.distractLabel}>Pohyb slov</Text>
+                <View style={s.attRow}>
+                  <TouchableOpacity
+                    style={[s.attBtn, !distractMovement && { backgroundColor: Colors.surface, borderColor: COLOR }]}
+                    onPress={() => setDistractMovement(false)}>
+                    <Text style={[s.attTxt, !distractMovement && { color: COLOR }]}>Vyp</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[s.attBtn, distractMovement && { backgroundColor: Colors.surface, borderColor: COLOR }]}
+                    onPress={() => setDistractMovement(true)}>
+                    <Text style={[s.attTxt, distractMovement && { color: COLOR }]}>Zap</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={s.distractRow}>
+                <Text style={s.distractLabel}>Vizuální šum</Text>
+                <View style={s.attRow}>
+                  <TouchableOpacity
+                    style={[s.attBtn, !distractNoise && { backgroundColor: Colors.surface, borderColor: COLOR }]}
+                    onPress={() => setDistractNoise(false)}>
+                    <Text style={[s.attTxt, !distractNoise && { color: COLOR }]}>Vyp</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[s.attBtn, distractNoise && { backgroundColor: Colors.surface, borderColor: COLOR }]}
+                    onPress={() => setDistractNoise(true)}>
+                    <Text style={[s.attTxt, distractNoise && { color: COLOR }]}>Zap</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
               <Text style={[s.hint, { marginTop: 12 }]}>Po každém neúspěšném pokusu se slova znovu zobrazí</Text>
               <TouchableOpacity style={[s.btn, { backgroundColor: COLOR, marginTop: 24 }]} onPress={startGame}>
                 <Text style={s.btnTxt}>Spustit kolo →</Text>
@@ -189,12 +246,21 @@ export default function WordsScreen({ navigation }: Props) {
           {phase === 'memorize' && (
             <View style={s.panel}>
               <Text style={s.plabel}>Zapamatuj si — <Text style={{ color: COLOR }}>slova</Text></Text>
-              <View style={s.chipGrid}>
-                {curWords.map((w, i) => (
-                  <View key={i} style={[s.chip, strictOrder && s.chipOrdered]}>
-                    {strictOrder && <Text style={s.chipNum}>{i + 1}.</Text>}
-                    <Text style={s.chipTxt}>{w}</Text>
-                  </View>
+              <View style={{ position: 'relative' }}>
+                <Animated.View style={[s.chipGrid, { transform: [{ translateX: shakeAnim }] }]}>
+                  {displayWords.map(({ word }, i) => (
+                    <View key={i} style={[s.chip, strictOrder && s.chipOrdered]}>
+                      {strictOrder && <Text style={s.chipNum}>{i + 1}.</Text>}
+                      <Text style={s.chipTxt}>{word}</Text>
+                    </View>
+                  ))}
+                </Animated.View>
+                {noisePatches.map(p => (
+                  <View
+                    key={p.id}
+                    pointerEvents="none"
+                    style={[s.noisePatch, { top: p.top, left: p.left, backgroundColor: p.color }]}
+                  />
                 ))}
               </View>
               <CountdownBar secondsLeft={secondsLeft} animWidth={animWidth} color={COLOR} />

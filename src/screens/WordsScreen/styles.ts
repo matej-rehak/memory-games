@@ -133,4 +133,23 @@ export const s = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
   },
+  noisePatch: {
+    position: 'absolute',
+    width: 60,
+    height: 28,
+    borderRadius: 8,
+    opacity: 0.18,
+  },
+  distractRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  distractLabel: {
+    fontFamily: 'Outfit_600SemiBold',
+    fontSize: 14,
+    color: Colors.ink,
+    flex: 1,
+  },
 });
