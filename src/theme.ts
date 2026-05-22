@@ -1,4 +1,4 @@
-export type GameId = 'words' | 'seq' | 'pairs' | 'nums' | 'letters';
+export type GameId = 'words' | 'seq' | 'pairs' | 'nums' | 'letters' | 'schulte';
 
 export const Colors = {
   bg: '#F8FAFC', // Slate 50 - cleaner background
@@ -30,6 +30,7 @@ export const GameColors: Record<GameId, string> = {
   pairs: '#10B981',
   nums: '#8B5CF6',
   letters: '#F59E0B',
+  schulte: '#F97316',
 };
 
 export const Shadows = {
@@ -62,6 +63,7 @@ export const GameNames: Record<GameId, string> = {
   pairs: '🃏 Pexeso',
   nums: '🧮 Čísla v mřížce',
   letters: '🔤 Chybějící písmeno',
+  schulte: '🔲 Schulte tabulka',
 };
 
 export const R = {

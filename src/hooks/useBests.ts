@@ -10,9 +10,10 @@ const KEYS: Record<GameId, string> = {
   pairs: '@best_pairs',
   nums: '@best_nums',
   letters: '@best_letters',
+  schulte: '@best_schulte',
 };
 
-const INITIAL: Bests = { words: null, seq: null, pairs: null, nums: null, letters: null };
+const INITIAL: Bests = { words: null, seq: null, pairs: null, nums: null, letters: null, schulte: null };
 
 export function useBests() {
   const [bests, setBests] = useState<Bests>(INITIAL);
@@ -34,7 +35,7 @@ export function useBests() {
     setBests(prev => {
       const current = prev[game];
       isBetter =
-        game === 'pairs'
+        game === 'pairs' || game === 'schulte'
           ? current === null || value < current
           : current === null || value > current;
       if (!isBetter) return prev;

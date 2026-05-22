@@ -8,6 +8,7 @@ import SeqScreen from '../screens/SeqScreen';
 import PairsScreen from '../screens/PairsScreen';
 import NumsScreen from '../screens/NumsScreen';
 import LettersScreen from '../screens/LettersScreen';
+import SchulteScreen from '../screens/SchulteScreen';
 
 export type RootStackParamList = {
   Hub: undefined;
@@ -16,6 +17,7 @@ export type RootStackParamList = {
   Pairs: undefined;
   Nums: undefined;
   Letters: undefined;
+  Schulte: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -30,6 +32,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Pairs" component={PairsScreen} />
         <Stack.Screen name="Nums" component={NumsScreen} />
         <Stack.Screen name="Letters" component={LettersScreen} />
+        <Stack.Screen name="Schulte" component={SchulteScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

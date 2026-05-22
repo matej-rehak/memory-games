@@ -59,6 +59,14 @@ const GAMES: GameCard[] = [
     tags: [{ label: 'Pravopis', color: 'n' }, { label: 'Lehká', color: 'g' }, { label: 'Střední', color: 'y' }, { label: 'Těžká', color: 'r' }],
     screen: 'Letters',
   },
+  {
+    id: 'schulte',
+    icon: '🔲',
+    title: 'Schulte tabulka',
+    desc: 'Najdi a klikni čísla v pořadí od 1 co nejrychleji. Trénink periferního vidění a pozornosti.',
+    tags: [{ label: 'Pozornost', color: 'n' }, { label: '3×3 – 7×7', color: 'g' }],
+    screen: 'Schulte',
+  },
 ];
 
 const TAG_BG: Record<string, string> = {
@@ -79,6 +87,7 @@ function bestLabel(id: GameId, val: number | null): string {
   if (id === 'words') return `${val} slov`;
   if (id === 'seq') return `${val} číslic`;
   if (id === 'pairs') return `${val} tahů`;
+  if (id === 'schulte') return `${val}s`;
   return `${val}%`;
 }
 
